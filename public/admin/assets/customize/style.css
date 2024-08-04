@@ -1,0 +1,67 @@
+.mt-24 {
+    margin-top: 24px;
+}
+.width-img {
+    max-width: 60px;
+    max-height: 100%;
+}
+.d-inline {
+    display: inline;
+}
+
+  /* Success Toast */
+  .toast-success {
+    background-color: #2525b9; /* Màu xanh lá cây */
+    color: white;
+}
+
+.message-err {
+    color: #e3342f;
+    font-size: 1em;
+    margin-top: 0.25rem;
+    font-weight: 600;
+    font-style: italic;
+}
+.is-invalid {
+    border-color: #e3342f;
+    padding-right: calc(1.5em + 0.75rem);
+    background-repeat: no-repeat;
+    background-position: right calc(0.375em + 0.1875rem) center;
+    background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+}
+.d-flex {
+    display: flex;
+    
+}
+.align-items-center {
+    align-items: center;
+}
+.preview-image {
+    font-size: 34px;
+    margin-right: 8px;
+}
+.variant-icon {
+    font-size: 28px;
+    margin-right: 4px;
+    margin-top: 2px;
+}
+.image-custom {
+    width: 36px;
+    height: auto;
+}
+.fa-add {
+    margin-right: 5px;
+    font-size: 18px;
+}
+
+.mr-5 {
+    margin-right: 5px;
+}
+.pr-5 {
+    padding-right: 5px;
+}
+#preview_images img {
+    width: 36px;
+    height: auto;
+    margin-top: 5px;
+}

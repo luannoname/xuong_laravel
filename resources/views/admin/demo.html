@@ -1,0 +1,25 @@
+function previewImageAlbum(input) {
+    const previewContainer = document.getElementById('preview_images');
+    previewContainer.innerHTML = ''; // Xóa hình ảnh hiện tại
+
+    if (input.files) {
+        Array.from(input.files).forEach(file => {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                // Tạo thẻ img mới và thêm vào container
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.className = 'variant-icon';
+                previewContainer.appendChild(img);
+            }
+            reader.readAsDataURL(file);
+        });
+    }
+}
+
+<div class="upload-wrapper">
+    <input id="image" multiple onchange="previewImageAlbum(this)" type="file" class="form-control" name="product_galleries[]">
+</div>
+<div id="preview_images" class="image-container">
+    <!-- Các ảnh sẽ được hiển thị ở đây -->
+</div>
