@@ -104,7 +104,7 @@
                                                     <form action="{{ route('admin.categories.destroy', $category->id) }}" method="POST" class="d-inline">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="button" class="btn btn-danger demo3">
+                                                        <button type="submit" class="btn btn-danger demo3">
                                                             <i class="fa fa-trash"></i>
                                                         </button>
                                                     </form>
@@ -153,117 +153,117 @@
      <script src="{{ url('admin/assets') }}/js/plugins/sweetalert/sweetalert.min.js"></script>
  
      <script>
-         $(document).ready(function() {
-             @if (session('success'))
-                 var shortCutFunction = 'success'; // Có thể là 'info', 'warning', 'error'
-                 var msg = "{{ session('success') }}";
-                 var title = 'Thông báo';
+        //  $(document).ready(function() {
+        //      @if (session('success'))
+        //          var shortCutFunction = 'success'; // Có thể là 'info', 'warning', 'error'
+        //          var msg = "{{ session('success') }}";
+        //          var title = 'Thông báo';
                  
-                 toastr.options = {
-                     "closeButton": true,
-                     "debug": false,
-                     "progressBar": true,
-                     "preventDuplicates": false,
-                     "positionClass": "toast-top-right",
-                     "onclick": null,
-                     "showDuration": "400",
-                     "hideDuration": "1000",
-                     "timeOut": "7000",
-                     "extendedTimeOut": "1000",
-                     "showEasing": "swing",
-                     "hideEasing": "linear",
-                     "showMethod": "fadeIn",
-                     "hideMethod": "fadeOut"
-                 }
+        //          toastr.options = {
+        //              "closeButton": true,
+        //              "debug": false,
+        //              "progressBar": true,
+        //              "preventDuplicates": false,
+        //              "positionClass": "toast-top-right",
+        //              "onclick": null,
+        //              "showDuration": "400",
+        //              "hideDuration": "1000",
+        //              "timeOut": "7000",
+        //              "extendedTimeOut": "1000",
+        //              "showEasing": "swing",
+        //              "hideEasing": "linear",
+        //              "showMethod": "fadeIn",
+        //              "hideMethod": "fadeOut"
+        //          }
  
-                 // Hiển thị thông báo toast
-                 var $toast = toastr[shortCutFunction](msg, title);
+        //          // Hiển thị thông báo toast
+        //          var $toast = toastr[shortCutFunction](msg, title);
                  
-                 // Chuyển hướng sau khi toast được hiển thị
-                 $toast.on('hidden.bs.toast', function () {
-                     window.location.href = "{{ route('admin.categories.index') }}";
-                 });
-             @endif
-         });
+        //          // Chuyển hướng sau khi toast được hiển thị
+        //          $toast.on('hidden.bs.toast', function () {
+        //              window.location.href = "{{ route('admin.categories.index') }}";
+        //          });
+        //      @endif
+        //  });
      </script>
  
      <script>
-        $(document).ready(function () {
-            $('.demo3').click(function (e) {
-                e.preventDefault(); // Ngăn chặn hành động mặc định của nút submit
+        // $(document).ready(function () {
+        //     $('.demo3').click(function (e) {
+        //         e.preventDefault(); // Ngăn chặn hành động mặc định của nút submit
 
-                var form = $(this).closest('form'); // Lấy form chứa nút delete
+        //         var form = $(this).closest('form'); // Lấy form chứa nút delete
 
-                swal({
-                    title: "Bạn có chắc chắn muốn xóa?",
-                    text: "Bạn sẽ không thể khôi phục lại tập tin này!",
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#DD6B55",
-                    confirmButtonText: "Xóa ngay!",
-                    cancelButtonText: "Hủy",
-                    closeOnConfirm: false,
-                    closeOnCancel: false
-                }, function (isConfirm) {
-                    if (isConfirm) {
-                        $.ajax({
-                            url: form.attr('action'),
-                            type: form.attr('method'),
-                            data: form.serialize(),
-                            success: function (response) {
-                                // Hiển thị thông báo thành công bằng Toastr
-                                var shortCutFunction = 'success'; // Có thể là 'info', 'warning', 'error'
-                                var msg = response.success;
-                                var title = 'Thông báo';
+        //         swal({
+        //             title: "Bạn có chắc chắn muốn xóa?",
+        //             text: "Bạn sẽ không thể khôi phục lại tập tin này!",
+        //             type: "warning",
+        //             showCancelButton: true,
+        //             confirmButtonColor: "#DD6B55",
+        //             confirmButtonText: "Xóa ngay!",
+        //             cancelButtonText: "Hủy",
+        //             closeOnConfirm: false,
+        //             closeOnCancel: false
+        //         }, function (isConfirm) {
+        //             if (isConfirm) {
+        //                 $.ajax({
+        //                     url: form.attr('action'),
+        //                     type: form.attr('method'),
+        //                     data: form.serialize(),
+        //                     success: function (response) {
+        //                         // Hiển thị thông báo thành công bằng Toastr
+        //                         var shortCutFunction = 'success'; // Có thể là 'info', 'warning', 'error'
+        //                         var msg = response.success;
+        //                         var title = 'Thông báo';
                                 
-                                toastr.options = {
-                                    "closeButton": true,
-                                    "debug": false,
-                                    "progressBar": true,
-                                    "preventDuplicates": false,
-                                    "positionClass": "toast-top-right",
-                                    "onclick": null,
-                                    "showDuration": "400",
-                                    "hideDuration": "1000",
-                                    "timeOut": "7000",
-                                    "extendedTimeOut": "1000",
-                                    "showEasing": "swing",
-                                    "hideEasing": "linear",
-                                    "showMethod": "fadeIn",
-                                    "hideMethod": "fadeOut"
-                                };
+        //                         toastr.options = {
+        //                             "closeButton": true,
+        //                             "debug": false,
+        //                             "progressBar": true,
+        //                             "preventDuplicates": false,
+        //                             "positionClass": "toast-top-right",
+        //                             "onclick": null,
+        //                             "showDuration": "400",
+        //                             "hideDuration": "1000",
+        //                             "timeOut": "7000",
+        //                             "extendedTimeOut": "1000",
+        //                             "showEasing": "swing",
+        //                             "hideEasing": "linear",
+        //                             "showMethod": "fadeIn",
+        //                             "hideMethod": "fadeOut"
+        //                         };
 
-                                toastr[shortCutFunction](msg, title);
+        //                         toastr[shortCutFunction](msg, title);
 
-                                // Hiển thị hộp thoại SweetAlert với nút OK
-                                swal({
-                                    title: "Đã xóa!",
-                                    text: "Tập tin của bạn đã bị xóa.",
-                                    type: "success",
-                                    confirmButtonText: "OK"
-                                }, function () {
-                                    window.location.reload(); // Tải lại trang sau khi nhấn OK
-                                });
-                            },
-                            error: function (xhr) {
-                                var shortCutFunction = 'error'; // Chọn loại thông báo lỗi
-                                var msg = xhr.responseJSON.error; // Lấy thông tin lỗi từ phản hồi JSON
-                                var title = 'Thông báo';
+        //                         // Hiển thị hộp thoại SweetAlert với nút OK
+        //                         swal({
+        //                             title: "Đã xóa!",
+        //                             text: "Tập tin của bạn đã bị xóa.",
+        //                             type: "success",
+        //                             confirmButtonText: "OK"
+        //                         }, function () {
+        //                             window.location.reload(); // Tải lại trang sau khi nhấn OK
+        //                         });
+        //                     },
+        //                     error: function (xhr) {
+        //                         var shortCutFunction = 'error'; // Chọn loại thông báo lỗi
+        //                         var msg = xhr.responseJSON.error; // Lấy thông tin lỗi từ phản hồi JSON
+        //                         var title = 'Thông báo';
 
-                                // Hiển thị thông báo lỗi bằng SweetAlert
-                                swal({
-                                    title: "Lỗi!",
-                                    text: msg,
-                                    type: "error",
-                                    confirmButtonText: "OK"
-                                });
-                            }
-                        });
-                    } else {
-                        swal.close(); // đóng hộp thoại khi ấn cancel
-                    }
-                });
-            });
-        });
+        //                         // Hiển thị thông báo lỗi bằng SweetAlert
+        //                         swal({
+        //                             title: "Lỗi!",
+        //                             text: msg,
+        //                             type: "error",
+        //                             confirmButtonText: "OK"
+        //                         });
+        //                     }
+        //                 });
+        //             } else {
+        //                 swal.close(); // đóng hộp thoại khi ấn cancel
+        //             }
+        //         });
+        //     });
+        // });
      </script>
 @endsection

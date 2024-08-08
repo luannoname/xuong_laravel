@@ -67,7 +67,7 @@
                             <div class="dropdown_search">
                                 <form class="action-form" action="#">
                                     <input class="form-control" placeholder="Enter your search key" type="text">
-                                    <button class="submit" type="submit"><i class="icon-magnifier"></i></button>
+                                    <button class="submit" type="submit"><i class="icon-magnifier"></i>hahahahha</button>
                                 </form>
                             </div>
                         </div>
@@ -77,9 +77,16 @@
                                     class="icon-user"></i></button>
                             <ul class="dropdown-menu dropdown-menu-right">
                                 <li><a class="dropdown-item" href="my-account.html">Tài khoản</a></li>
-                                <li><a class="dropdown-item" href="my-account.html">Đơn hàng</a></li>
+                                <li><a class="dropdown-item" href="{{ route('client.order.index') }}">Đơn hàng</a></li>
                                 <li><a class="dropdown-item" href="checkout.html">Đăng nhập</a></li>
-                                <li><a class="dropdown-item" href="{{ route('client.login') }}">Đăng xuất</a></li>
+                                <li>
+                                    <form action="{{ route('logout') }}" method="POST">
+                                        @csrf
+                                        <button type="submit">Đăng xuất</button>
+                                    </form>
+                                </li>
+                                
+                                
                             </ul>
                         </div>
                         <!-- Single Wedge End -->
@@ -217,7 +224,7 @@
                                     </li>
                                 </ul>
                             </li>
-                            <li class="dropdown"><a href="{{ route('client.catalog') }}">Sản phẩm<i class="ion-ios-arrow-down"></i></a>
+                            <li class="dropdown"><a href="#">Sản phẩm<i class="ion-ios-arrow-down"></i></a>
                                 <ul class="sub-menu">
                                     <li><a href="404.html">Danh mục 1</a></li>
                                     <li><a href="privacy-policy.html">Danh mục 2</a></li>
@@ -322,8 +329,8 @@
                 </table>
             </div>
             <div class="buttons">
-                <a href="{{ route('client.cart') }}" class="btn btn-dark btn-hover-primary mb-30px">view cart</a>
-                <a href="{{ route('client.checkout') }}" class="btn btn-outline-dark current-btn">checkout</a>
+                <a href="#" class="btn btn-dark btn-hover-primary mb-30px">view cart</a>
+                <a href="#" class="btn btn-outline-dark current-btn">checkout</a>
             </div>
             <p class="minicart-message">Free Shipping on All Orders Over $100!</p>
         </div>
@@ -393,7 +400,7 @@
                         </li>
                     </ul>
                 </li>
-                <li><a href="{{ route('client.catalog') }}"><span class="menu-text">Sản phẩm</span></a>
+                <li><a href="#"><span class="menu-text">Sản phẩm</span></a>
                     <ul class="sub-menu">
                         <li><a href="">Danh mục 1</a></li>
                         <li><a href="privacy-policy.html">Danh mục 2</a></li>

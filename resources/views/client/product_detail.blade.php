@@ -1,13 +1,9 @@
 @extends('layouts.client')
 
 @section('content')
-@if ($errors->any())
+@if (session('error'))
     <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
+        {{ session('error') }}
     </div>
 @endif
         <!-- OffCanvas Cart Start -->
@@ -297,11 +293,12 @@
                                     <img class="img-responsive m-auto" src="{{ Storage::url($product->image_thumb) }}" alt="">
                                 </div>
                                 @foreach ($product->variants as $variant)
-                                    <div class="swiper-slide">
-                                        <img class="img-responsive m-auto selectable-image" src="{{ Storage::url($variant->image) }}"
+                                    <div class="swiper-slide"> 
+                                        <img class="img-responsive m-auto selectable-image selectable-image" src="{{ Storage::url($variant->image) }}"
                                         data-price="{{ $variant->price }}"
                                         data-price_sale="{{ $variant->price_sale }}"
                                         data-id="{{ $variant->id }}"
+                                        data-stock="{{ $variant->quantity }}"
                                         data-image="{{ $variant->image }}">
                                     </div>
                                 @endforeach
@@ -341,12 +338,12 @@
                                 </ul>
                             </div>
                             <p class="quickview-para">Lorem ipsum dolor sit amet, consectetur adipisic elit eiusm tempor incidid ut labore et dolore magna aliqua. Ut enim ad minim venialo quis nostrud exercitation ullamco</p>
-                            <form action="{{ route('client.cart.add') }}" method="POST" id="add-to-cart-form">
+                            <form action="{{ route('client.carts.add') }}" method="POST" id="add-to-cart-form">
                                 @csrf
-                                <input type="text" name="price" id="price" value="{{ old('price') }}">
-                                <input type="text" name="price_sale" id="price_sale" value="{{ old('price_sale') }}">
-                                <input type="text" name="id" id="id" value="{{ old('id') }}">
-                                <input type="text" name="image" id="image" value="{{ old('image') }}">
+                                <input type="hidden" name="price" id="price" value="{{ old('price') }}">
+                                <input type="hidden" name="price_sale" id="price_sale" value="{{ old('price_sale') }}">
+                                <input type="hidden" name="product_variant_id" id="id" value="{{ old('id') }}">
+                                <input type="hidden" name="image" id="image" value="{{ old('image') }}">
                                 <div>
                                     <label @style('display: block') class="form-check-label">Màu sắc</label>
                                     
@@ -370,7 +367,7 @@
                                 <div class="pro-details-quality">
                                     {{-- <input name="quantity" value="1" @style('width: 62px; margin-right: 12px;') type="number" /> --}}
                                     <div class="cart-plus-minus">
-                                        <input class="cart-plus-minus-box" type="text" name="quantity" value="1" />
+                                        <input class="cart-plus-minus-box" type="text" name="quantity" value="1"/>
                                     </div>
                                     <div class="pro-details-cart">
                                         <button type="submit" class="add-cart btn btn-primary btn-hover-primary ml-4"> Thêm vào giỏ hàng</button>
@@ -738,6 +735,19 @@
         </div>
     
         <!-- New Product End -->
+        {{-- <img class="img-responsive m-auto selectable-image" src="{{ Storage::url($variant->image) }}"
+    data-price="{{ $variant->price }}"
+    data-price_sale="{{ $variant->price_sale }}"
+    data-id="{{ $variant->id }}"
+    data-image="{{ $variant->image }}"
+    data-stock="{{ $variant->quantity }}"> <!-- Thêm dữ liệu tồn kho -->
+<input type="hidden" name="price" id="price" value="{{ old('price') }}">
+<input type="hidden" name="price_sale" id="price_sale" value="{{ old('price_sale') }}">
+<input type="hidden" name="product_variant_id" id="id" value="{{ old('id') }}">
+<input type="hidden" name="image" id="image" value="{{ old('image') }}">
+<div class="cart-plus-minus">
+    <input class="cart-plus-minus-box" type="text" name="quantity" value="1"/>
+</div> --}}
 @endsection
 
 @section('js')
@@ -769,22 +779,36 @@
             Cart Plus Minus Button
         ------------------------------ */
         var CartPlusMinus = $(".cart-plus-minus");
-        CartPlusMinus.prepend('<div class="dec qtybutton">-</div>');
-        CartPlusMinus.append('<div class="inc qtybutton">+</div>');
-        $(".qtybutton").on("click", function() {
-            var $button = $(this);
-            var oldValue = $button.parent().find("input").val();
-            if ($button.text() === "+") {
-                var newVal = parseFloat(oldValue) + 1;
-            } else {
-                // Don't allow decrementing below zero
-                if (oldValue > 1) {
-                    var newVal = parseFloat(oldValue) - 1;
-                } else {
-                    newVal = 1;
-                }
-            }
-            $button.parent().find("input").val(newVal);
-        });
+CartPlusMinus.prepend('<div class="dec qtybutton">-</div>');
+CartPlusMinus.append('<div class="inc qtybutton">+</div>');
+
+$(".qtybutton").on("click", function() {
+    var $button = $(this);
+    var oldValue = parseInt($button.parent().find("input").val());
+    var stock = parseInt($(".selectable-image.active").data("stock")); // Lấy số lượng tồn kho của biến thể đã chọn
+
+    if ($button.text() === "+") {
+        var newVal = oldValue + 1;
+        if (newVal > stock) { // Kiểm tra nếu vượt quá số lượng tồn kho
+            alert('Số lượng không được vượt quá tồn kho');
+            newVal = stock; // Đặt lại giá trị mới bằng tồn kho
+        }
+    } else {
+        if (oldValue > 1) {
+            var newVal = oldValue - 1;
+        } else {
+            newVal = 1;
+        }
+    }
+
+    $button.parent().find("input").val(newVal);
+});
+
+// Thêm mã để đặt class "active" cho biến thể đã chọn và đặt lại số lượng về 1
+$(".selectable-image").on("click", function() {
+    $(".selectable-image").removeClass("active");
+    $(this).addClass("active");
+    $(".cart-plus-minus-box").val(1); // Đặt lại số lượng về 1 khi chọn biến thể mới
+});
     </script>
 @endsection

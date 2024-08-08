@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class CategoryController extends Controller
@@ -122,4 +124,73 @@ class CategoryController extends Controller
             'success' => 'Xóa danh mục thành công'
         ]);
     }
+
+//     public function destroy(string $id)
+// {
+//     $category = Category::with(['product.variants', 'product.galleries'])->findOrFail($id);
+
+//     try {
+//         DB::beginTransaction();
+
+//         // Xóa ảnh đại diện của danh mục nếu có
+//         if ($category->thumbnail && Storage::disk('public')->exists($category->thumbnail)) {
+//             Storage::disk('public')->delete($category->thumbnail);
+//         }
+
+//         // Xóa ảnh và biến thể liên quan từ các sản phẩm
+//         $products = $category->product;
+//         foreach ($products as $product) {
+//             // Xóa ảnh chính của sản phẩm
+//             if ($product->image_thumb && Storage::disk('public')->exists($product->image_thumb)) {
+//                 Storage::disk('public')->delete($product->image_thumb);
+//             }
+
+//             // Xóa ảnh từ bảng galleries
+//             $galleries = $product->galleries;
+//             foreach ($galleries as $gallery) {
+//                 if ($gallery->image && Storage::disk('public')->exists($gallery->image)) {
+//                     Storage::disk('public')->delete($gallery->image);
+//                 }
+//             }
+
+//             // Xóa toàn bộ ảnh trong thư mục
+//             $galleriesImgPath = 'uploads/product_galleries/' . $product->id;
+//             if (Storage::disk('public')->exists($galleriesImgPath)) {
+//                 Storage::disk('public')->deleteDirectory($galleriesImgPath);
+//             }
+
+//             // Xóa ảnh từ bảng product_variants
+//             $variants = $product->variants;
+//             foreach ($variants as $variant) {
+//                 if ($variant->image && Storage::disk('public')->exists($variant->image)) {
+//                     Storage::disk('public')->delete($variant->image);
+//                 }
+//                 // Xóa biến thể
+//                 $variant->delete();
+//             }
+
+//             // Xóa sản phẩm
+//             $product->delete();
+//         }
+
+//         // Xóa danh mục
+//         $category->delete();
+
+//         DB::commit();
+
+//         return response()->json([
+//             'success' => 'Xóa danh mục thành công'
+//         ]);
+//     } catch(\Exception $exception) {
+//         DB::rollBack();
+//         dd($exception);
+
+//         // Xử lý xóa ảnh trong storage nếu có lỗi
+//         // Có thể thêm code để xóa các ảnh đã xóa nhưng không thành công trong bước trước
+
+//         return response()->json([
+//             'error' => 'Có lỗi xảy ra khi xóa danh mục'
+//         ], 500);
+//     }
+// }
 }

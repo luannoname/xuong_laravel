@@ -252,7 +252,7 @@
             
             <div class="col-lg-12 col-md-12 col-sm-12 col-12">
                     
-                    <form action="{{ route('client.cart.update') }}" method="post">
+                    <form action="{{ route('client.carts.update') }}" method="post">
                         @csrf
                         <div class="table-content table-responsive cart-table-content">
                             <table>
@@ -269,7 +269,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($productVariants as $item)
+                                    @foreach ($cartItems as $item)
                                         {{-- <input type="hidden" name="{{ $item->product_image_thumb }}" value="{{ $item->product_image_thumb }}">
                                         <input type="hidden" name="{{ $item->product_name }}" value="{{ $item->product_name }}">
                                         <input type="hidden" name="{{ $item->product_price_sale ?: $item->product_price }}" value="{{ $item->product_price_sale ?: $item->product_price }}">
@@ -289,11 +289,11 @@
                                                     <p class="amount old-price-sm" style="text-decoration: line-through">{{number_format($item->productVariant->price , 0, '.' , '.') }}vnđ</p>
                                                 @endif
                                             </td>
-                                            <td class="product-name"><a href="#">{{ $item->productVariant->color->name }}</a></td>
-                                            <td class="product-name"><a href="#">{{ $item->productVariant->size->name }}</a></td>
+                                            <td class="product-name"><a href="#">{{ $item->color->name }}</a></td>
+                                            <td class="product-name"><a href="#">{{ $item->size->name }}</a></td>
                                             <td class="product-quantity">
                                                 <div class="cart-plus-minus">
-                                                    <input class="cart-plus-minus-box quantityInput" name="cart_items[{{ $item->product_variant_id }}][quantity]"
+                                                    <input class="cart-plus-minus-box quantityInput" name="cart_items[{{ $item->product_variant_id }}][quantity]" data-stock="{{ $item->productVariant->quantity }}"
                                                     data-price="{{ $item->productVariant->price_sale ?: $item->productVariant->price }}" type="text" value="{{ $item->quantity }}" />
                                                 </div>
                                             </td>
@@ -302,7 +302,7 @@
                                                     {{ number_format($item->quantity * ($item->productVariant->price_sale ?: $item->productVariant->price), 0, '.', '.') . ' vnđ' }}
                                                 </span>
                                             </td>
-                                            <td class="product-remove" data-product-variant-id="{{ $item->product_variant_id }}">
+                                            <td class="product-remove" data-order-item-id="{{ $item->id }}">
                                                 {{-- <a href="#"><i class="icon-pencil"></i></a> --}}
                                                 <a href="#"><i class="icon-close remove-item"></i></a>
                                             </td>
@@ -324,7 +324,9 @@
                                     <a href="{{ route('client.order.create') }}">Tiến hành thanh toán</a>
                 <form action="{{ route('client.order.store') }} " method="post">
                     @csrf
-                        <input type="hidden" name="productVariants" value="{{ $productVariants }}">
+                        {{-- <input type="hidden" name="productVariants" value="{{ $productVariants }}"> --}}
+                        {{-- <input type="hidden" name="product_color_id" value="{{ $productColorId }}">
+                        <input type="hidden" name="product_size_id" value="{{ $productSizeId }}"> --}}
                         <input type="hidden" name="totalAmount" value="{{ $totalAmount }}">
                         <input type="hidden" name="userId" value="{{ $userId }}">
                                     </div>
@@ -376,34 +378,39 @@
             Cart Plus Minus Button
         ------------------------------ */
         var CartPlusMinus = $(".cart-plus-minus");
-        CartPlusMinus.prepend('<div class="dec qtybutton">-</div>');
-        CartPlusMinus.append('<div class="inc qtybutton">+</div>');
+CartPlusMinus.prepend('<div class="dec qtybutton">-</div>');
+CartPlusMinus.append('<div class="inc qtybutton">+</div>');
 
-        $(".qtybutton").on("click", function() {
-            var $button = $(this);
-            var $input = $button.parent().find("input");
-            var oldValue = $input.val();
-            var price = $input.data('price');
+$(".qtybutton").on("click", function() {
+    var $button = $(this);
+    var $input = $button.parent().find("input");
+    var oldValue = $input.val();
+    var price = $input.data('price');
+    var stock = $input.data('stock');
 
-            var newVal;
-            if ($button.text() === "+") {
-                newVal = parseFloat(oldValue) + 1;
-            } else {
-                if (oldValue > 1) {
-                    newVal = parseFloat(oldValue) - 1;
-                } else {
-                    newVal = 1;
-                }
-            }
+    var newVal;
+    if ($button.text() === "+") {
+        newVal = parseFloat(oldValue) + 1;
+        if (newVal > stock) {
+            alert("Số lượng sản phẩm trong kho không đủ.");
+            return;
+        }
+    } else {
+        if (oldValue > 1) {
+            newVal = parseFloat(oldValue) - 1;
+        } else {
+            newVal = 1;
+        }
+    }
 
-            $input.val(newVal);
+    $input.val(newVal);
 
-            // Cập nhật giá trị subtotal
-            var subtotal = newVal * price;
-            $button.closest('tr').find('.subtotal').text(subtotal.toLocaleString('en-US') + ' vnđ');
+    // Cập nhật giá trị subtotal
+    var subtotal = newVal * price;
+    $button.closest('tr').find('.subtotal').text(subtotal.toLocaleString('en-US') + ' vnđ');
 
-            updateTotal();
-        });
+    updateTotal();
+});
 
         $('.product-remove').on('click', function () {
             
@@ -415,14 +422,14 @@
                 updateTotal();
     
                 var $cartItem = $(this).closest('.product-remove');
-                var productVariantId = $cartItem.data('product-variant-id');
+                var OrderItemId = $cartItem.data('order-item-id');
                 // Xóa sản phẩm khỏi cơ sở dữ liệu qua AJAX
                 $.ajax({
-                    url: '{{ route('client.cart.remove') }}',
+                    url: '{{ route('client.carts.remove') }}',
                     type: 'POST',
                     data: {
                         _token: '{{ csrf_token() }}',
-                        product_variant_id: productVariantId
+                        OrderItemId: OrderItemId
                     },
                     success: function(response) {
                         // Nếu xóa thành công, xóa sản phẩm khỏi giao diện

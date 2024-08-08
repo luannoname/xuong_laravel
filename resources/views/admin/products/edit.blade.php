@@ -166,6 +166,9 @@
                                                 
                                             </div>
                                         </div>
+                                        <div  class="text-center">
+                                            <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                                        </div>
 
                                         
 

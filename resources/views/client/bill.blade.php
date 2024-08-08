@@ -266,30 +266,28 @@
                                     <li>Tên sản phẩm</li>
                                     <li>Hình ảnh</li>
                                     <li>Giá</li>
+                                    <li>Màu</li>
+                                    <li>Size</li>
                                     <li>Số lượng</li>
-                                    <li>Ngày đặt</li>
-                                    <li>Trạng thái</li>
-                                    <li>Thành tiền</li>
-                                    <li>Phương thức thanh toán</li>
                                 </ul>
                             </div>
                             <div class="your-order-middle">
                                 <ul>
 
-                                        @foreach ($order->orderItems as $item)
-                                            <li>
-                                                <span class="order-middle-left">{{ $item->product_name }}</span> 
-                                                <span class="order-middle-left"><img src="{{ Storage::url($item->product_image_thumb) }}" @style('width:50px') alt=""></span> 
-                                                <span class="order-price">{{ number_format($item->product_price_sale ?: $item->product_price, 0, '', '.') }} vnđ</span>
-                                                <span class="order-price">{{ $item->quantity }}</span>
-                                                <span class="order-price">{{ $item->created_at->format('d-m-Y') }}</span>
-                                                <span class="order-price">{{ $orderStatus[$order->order_status] }}</span>
-                                                <span class="order-price">{{ number_format($item->quantity * $item->product_price_sale ?: $item->product_price, 0, '', '.') }} vnđ</span>
-                                                <span class="order-price">{{ $paymentStatus[$order->payment_status] }}</span>
-                                            </li>
-                                        @endforeach
+                                    @foreach ($data->orderItems as $item)
+                                        <li>
+                                            <span class="order-middle-left">{{ $item['product_name'] }}</span> 
+                                            <span class="order-price"><img src="{{ Storage::url($item['product_image_thumb']) }}" @style('width:50px') alt=""></span>
+                                            <span class="order-price">{{ number_format($item['product_price_sale'] ?: $item['product_price'], 0, '', '.') }} vnđ</span>
+                                            <span class="order-price">{{ $item['variant_color_name'] }}</span>
+                                            <span class="order-price">{{ $item['variant_size_name'] }}</span>
+                                            <span class="order-price">{{ $item['quantity'] }}</span>
+                                        </li>
+                                    @endforeach
                                 </ul>
+                                
                             </div>
+                            
                             <div class="your-order-bottom">
                                 <ul>
                                     <li class="your-order-shipping">Vận chuyển</li>
@@ -304,6 +302,26 @@
                             </div>
                         </div>
                     </div>
+                    <table class="table table-striped">
+                        <thead>
+                           <tr>
+                                <th>Ngày đặt</th>
+                                <th>Trạng thái</th>
+                                <th>Thành tiền</th>
+                                <th>Phương thức thanh toán</th>
+                           </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($order->orderItems as $item) 
+                                <tr>
+                                    <td class="order-price">{{ $item->created_at->format('d-m-Y') }}</td>
+                                    <td class="order-price">{{ $orderStatus[$order->order_status] }}</td>
+                                    <td class="order-price">{{ number_format($item->quantity * $item->product_price_sale ?: $item->product_price, 0, '', '.') }} vnđ</td>
+                                    <td class="order-price">{{ $paymentStatus[$order->payment_status] }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                     <div class="Place-order mt-25">
                         <a @style('width: 100%; background-color: #ff7004;
                         border-radius: 0;

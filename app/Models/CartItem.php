@@ -13,6 +13,8 @@ class CartItem extends Model
         'product_variant_id',
         'cart_id',
         'quantity',
+        'product_size_id',
+        'product_color_id',
     ];
 
     public function cart () {
@@ -21,5 +23,15 @@ class CartItem extends Model
 
     public function productVariant () {
         return $this->belongsTo(ProductVariant::class);
+    }
+
+    public function size()
+    {
+        return $this->belongsTo(ProductSize::class, 'product_size_id');
+    }
+
+    public function color()
+    {
+        return $this->belongsTo(ProductColor::class, 'product_color_id');
     }
 }

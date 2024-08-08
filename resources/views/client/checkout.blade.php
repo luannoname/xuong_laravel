@@ -353,15 +353,15 @@
                                     <input type="hidden" name="orderItems[{{ $index }}][product_image_thumb]" value="{{ $item->productVariant->image }}">
                                     <input type="hidden" name="orderItems[{{ $index }}][product_price]" value="{{ $item->productVariant->price }}">
                                     <input type="hidden" name="orderItems[{{ $index }}][product_price_sale]" value="{{ $item->productVariant->price_sale }}">
-                                    <input type="hidden" name="orderItems[{{ $index }}][variant_size_name]" value="{{ $item->productVariant->size->name }}">
-                                    <input type="hidden" name="orderItems[{{ $index }}][variant_color_name]" value="{{ $item->productVariant->color->name }}">
+                                    <input type="hidden" name="orderItems[{{ $index }}][variant_size_name]" value="{{ $item->size->name }}">
+                                    <input type="hidden" name="orderItems[{{ $index }}][variant_color_name]" value="{{ $item->color->name }}">
                                     <input type="hidden" name="orderItems[{{ $index }}][quantity]" value="{{ $item->quantity }}">
                                         <li>
                                             <span class="order-middle-left">
                                                 {{ $item->productVariant->product->name }} 
                                                 | {{ $item->quantity }} 
-                                                | {{ $item->productVariant->size->name }} 
-                                                | {{ $item->productVariant->color->name }}</span> 
+                                                | {{ $item->size->name }} 
+                                                | {{ $item->color->name }}</span> 
                                             <span class="order-price">{{ number_format($item->quantity * ($item->productVariant->price_sale ?: $item->productVariant->price), 0, '', '.') }} vnđ </span>
                                         </li>
                                     @endforeach

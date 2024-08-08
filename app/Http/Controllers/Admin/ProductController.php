@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductRequest;
 use App\Models\Category;
+use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\ProductColor;
 use App\Models\ProductGallery;
@@ -244,7 +245,20 @@ class ProductController extends Controller
      */
     public function destroy(string $id)
     {
-        $product = Product::with(['variants', 'galleries'])->findOrFail($id);
+        $product = Product::with(['variants.orderItems.order', 'galleries'])->findOrFail($id);
+
+        // // Kiểm tra trạng thái đơn hàng liên quan đến các biến thể của sản phẩm
+        // $orderItems = OrderItem::whereHas('variant', function($query) use ($id) {
+        //     $query->where('product_id', $id);
+        // })->with('order')->get();
+
+        // foreach ($orderItems as $orderItem) {
+        //     if ($orderItem->order->status !== 'cancel') {
+        //         return response()->json([
+        //             'error' => 'Không thể xóa sản phẩm vì có đơn hàng liên quan chưa bị hủy.'
+        //         ], 400);
+        //     }
+        // }
 
         try {
             DB::beginTransaction();
